@@ -30,7 +30,13 @@ class UrlpreviewBot(Plugin):
         count = 0
         show_image = False
         filename = uri = ''
+        first = True
         for _, url_str in matches:
+          if first:
+            first = False
+          else:
+            msgs += "\n---\n"
+
           if youtube_pattern.fullmatch(url_str):
             break
           if count >= MAX_LINKS:
@@ -53,10 +59,12 @@ class UrlpreviewBot(Plugin):
 
           # If there is an og:title use this
           if cont.get('og:title', False) is not False:
-            msgs += "> "+str(cont.get('og:site-title', ''))+"\n> #### ["+str(cont.get('og:title', ''))+"]("+str(url_str)+")\n> "+str(embed_desc)
+            if cont.get('og:site-title', '') != '':
+              msgs += "**"+str(cont.get('og:site-title', ''))+"**\n"
+            msgs += "**["+str(cont.get('og:title', ''))+"]("+str(url_str)+")**\n*"+str(embed_desc)+"*"
           # If there is not an og:title, but there is an image, use this
           elif cont.get('og:title', True) and cont['og:image']:
-            msgs += "> "+str(cont.get('og:site-title', ''))+"\n> "+str(embed_desc)
+            msgs += "**"+str(cont.get('og:site-title', ''))+"**\n*"+str(embed_desc)+"*"
 
           if cont.get('og:image', False) is not False:
             embed_img = url_str
@@ -82,10 +90,10 @@ class UrlpreviewBot(Plugin):
         if count <= 0 or msgs == "":
           return
 
-        # print('MSGS', msgs)
-        await evt.respond(str(msgs), allow_html=True)
-
         if show_image and uri != "" and filename != "":
           await self.client.send_image(evt.room_id, url=uri, file_name=filename, info=ImageInfo(
             mimetype='image/jpg'
           ))
+
+        # print('MSGS', msgs)
+        await evt.respond(str(msgs), allow_html=True)
