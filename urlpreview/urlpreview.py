@@ -5,7 +5,6 @@ from maubot import Plugin, MessageEvent
 from maubot.handlers import command
 import json
 from typing import List, Type
-import urllib.parse
 
 MAX_LINKS = 3
 
@@ -32,7 +31,6 @@ class UrlpreviewBot(Plugin):
             break
 
           appid = self.config["appid"]
-          url_params = urllib.parse.urlencode({"i": url_str, "appid": appid})
           embed_content =  "https://matrix.org/_matrix/media/r0/preview_url?url={}".format(url_str)
           resp = await self.http.get(embed_content, headers={"Authorization":"Bearer {}".format(appid)})
 
