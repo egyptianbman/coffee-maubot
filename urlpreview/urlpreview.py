@@ -7,6 +7,7 @@ import json
 from typing import List, Type
 
 MAX_LINKS = 3
+youtube_pattern = re.compile(r"^.*(youtube\.com|youtu.be).*$")
 
 class Config(BaseProxyConfig):
     def do_update(self, helper: ConfigUpdateHelper) -> None:
@@ -27,6 +28,8 @@ class UrlpreviewBot(Plugin):
         msgs = ""
         count = 0
         for _, url_str in matches:
+          if youtube_pattern.fullmatch(url_str):
+            break
           if count >= MAX_LINKS:
             break
 
