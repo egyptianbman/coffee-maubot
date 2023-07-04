@@ -50,11 +50,11 @@ class UrlpreviewBot(Plugin):
 
           # If there is an og:title use this
           if cont.get('og:title', False) is not False:
-            msgs += "> "+str(cont.get('og:site-title', ''))+"\n> ### ["+str(cont.get('og:title', ''))+"]("+str(url_str)+")\n> "+str(embed_desc)
+            msgs += "> "+str(cont.get('og:site-title', ''))+"\n> #### ["+str(cont.get('og:title', ''))+"]("+str(url_str)+")\n> "+str(embed_desc)
           # If there is not an og:title, but there is an image, use this
           elif cont.get('og:title', True) and cont['og:image']:
             msgs += "> "+str(cont.get('og:site-title', ''))+"\n> "+str(embed_desc)
-          
+
           if cont.get('og:image', False) is not False:
             try:
               mauApi = mautrix.api.HTTPAPI('https://matrix.org')
